@@ -63,3 +63,20 @@ class Athlete:
         return f"{self.name} [{self.plan}]"
 
 
+# CALCULATIONS
+
+def calc_training(athlete):     # weekly rate x 4 weeks
+    return athlete.weekly_rate * WEEKS
+
+def calc_coaching(athlete):     # cap hours at MAX_COACHING then multiply out
+    hours = min(athlete.coaching, MAX_COACHING)
+    return hours * WEEKS * COACHING_RATE
+
+def calc_competitions(athlete): # Beginners cannot compete
+    if not athlete.can_compete():
+        return 0.00
+    return athlete.competitions * COMP_FEE
+
+def calc_total(athlete):        # sum all three fees
+    return calc_training(athlete) + calc_coaching(athlete) + calc_competitions(athlete)
+
