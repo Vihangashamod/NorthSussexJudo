@@ -139,3 +139,60 @@ def choose_category():    # display category menu and return (name, limit_kg)
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
+
+# DISPLAY
+
+def print_header():
+    print(SEPARATOR)
+    print("   NORTH SUSSEX JUDO - Monthly Fee Calculator")
+    print("   by AQ Digital Solutions (AQDS)")
+    print(SEPARATOR)
+
+def print_report(athlete):    # print full monthly report for one athlete
+    t     = calc_training(athlete)
+    c     = calc_coaching(athlete)
+    x     = calc_competitions(athlete)
+    total = t + c + x
+
+    print(f"\n{SEPARATOR}")
+    print(f"  Monthly Report - {athlete.name}")
+    print(DASH)
+    print(f"  Plan   : {athlete.plan}")
+    print(f"  Weight : {athlete.weight_status()}")
+    print(f"\n  Itemised Costs")
+    print(DASH)
+
+    # training - always shown
+    print(f"  Training Plan ({athlete.plan})")
+    print(f"    £{athlete.weekly_rate:.2f}/week x {WEEKS} weeks"
+          f"                  £{t:>7.2f}")
+
+    # coaching - only shown if athlete has any
+    if athlete.coaching > 0:
+        hrs = min(athlete.coaching, MAX_COACHING)
+        print(f"  Private Coaching")
+        print(f"    {hrs:.1f} hr/wk x {WEEKS} wks x £{COACHING_RATE:.2f}/hr"
+              f"       £{c:>7.2f}")
+
+    # competitions - only shown if eligible and entered any
+    if athlete.can_compete() and athlete.competitions > 0:
+        print(f"  Competition Entries")
+        print(f"    {athlete.competitions} x £{COMP_FEE:.2f}"
+              f"                           £{x:>7.2f}")
+
+    print(DASH)
+    print(f"  TOTAL DUE THIS MONTH                      £{total:>7.2f}")
+    print(SEPARATOR)
+
+
+def print_summary(athletes):    # one row per athlete and grand total at end
+    print(f"\n{DASH}")
+    print(f"  {'#':<4}  {'Name':<22}  {'Plan':<14}  {'Total':>8}")
+    print(DASH)
+    grand = 0.00
+    for i, athlete in enumerate(athletes, start=1):
+        total  = calc_total(athlete)
+        grand += total
+        print(f"  {i:<4}  {athlete.name:<22}  {athlete.plan:<14}  £{total:>7.2f}")
+    print(DASH)
+    print(f"  {'Grand Total':<42}  £{grand:>7.2f}\n")
