@@ -80,3 +80,62 @@ def calc_competitions(athlete): # Beginners cannot compete
 def calc_total(athlete):        # sum all three fees
     return calc_training(athlete) + calc_coaching(athlete) + calc_competitions(athlete)
 
+# INPUT VALIDATIONS
+
+def ask_string(prompt):
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("  Field cannot be blank.\n")
+
+def ask_number(prompt, whole=False, minimum=0.0, maximum=None):
+    while True:
+        try:
+            raw   = input(prompt).strip()
+            value = int(raw) if whole else float(raw)
+            if value < minimum:
+                print(f"  Must be {minimum} or above.\n")
+            elif maximum is not None and value > maximum:
+                print(f"  Must be {maximum} or below.\n")
+            else:
+                return value
+        except ValueError:
+            msg = "whole number" if whole else "number (e.g. 74.5)"
+            print(f"  Please enter a {msg}.\n")
+
+def ask_yes_no(prompt):    # return True for y, False for n
+    while True:
+        answer = input(prompt).strip().lower()
+        if answer in ("y", "yes"): return True
+        if answer in ("n", "no"):  return False
+        print("  Type y or n.\n")
+
+def choose_plan():    # display plan menu and return (plan_name, weekly_rate)
+    print("\n  Training Plans:")
+    print("  " + DASH)
+    for key, (name, rate) in PLANS.items():
+        print(f"    {key}. {name:<14}  £{rate:.2f}/week")
+    print("  " + DASH)
+    while True:
+        choice = input("  Choose plan (1-3): ").strip()
+        if choice in PLANS:
+            return PLANS[choice]   # returns (name, weekly_rate)
+        print("  Enter 1, 2 or 3.\n")
+
+def choose_category():    # display category menu and return (name, limit_kg)
+    print("\n  Weight Categories:")
+    print("  " + DASH)
+    for key, (name, limit) in CATEGORIES.items():
+        info = "No upper limit" if limit is None else f"Up to {limit} kg"
+        print(f"    {key}. {name:<24}  {info}")
+    print("  " + DASH)
+    while True:
+        choice = input("  Choose category (1-6): ").strip()
+        if choice in CATEGORIES:
+            return CATEGORIES[choice]   # returns (name, limit)
+        print("  Enter 1 to 6.\n")
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
+
