@@ -196,3 +196,101 @@ def print_summary(athletes):    # one row per athlete and grand total at end
         print(f"  {i:<4}  {athlete.name:<22}  {athlete.plan:<14}  £{total:>7.2f}")
     print(DASH)
     print(f"  {'Grand Total':<42}  £{grand:>7.2f}\n")
+
+
+# EVENT HANDLERS
+
+def handle_register(athletes):    # collect details and register a new athlete
+    print(f"\n{DASH}\n  Register New Athlete\n{DASH}")
+
+    while True:
+        name = ask_string("  Athlete name: ")
+        if any(a.name.lower() == name.lower() for a in athletes):
+            print(f"  '{name}' is already registered.\n")
+        else:
+            break
+
+    plan_name, weekly_rate = choose_plan()
+    weight                 = ask_number("\n  Current weight (kg): ", minimum=0.1)
+    category, cat_limit    = choose_category()
+
+    if plan_name == "Beginner":
+        print("\n  Beginners cannot enter competitions. Set to 0.")
+        competitions = 0
+    else:
+        competitions = ask_number("\n  Competitions this month: ", whole=True)
+
+    coaching = 0.0
+    if ask_yes_no("\n  Add private coaching? (y/n): "):
+        coaching = ask_number(
+            f"  Hours per week (0 - {MAX_COACHING}): ",
+            minimum=0.0, maximum=float(MAX_COACHING)
+        )
+
+    athletes.append(Athlete(
+        name, plan_name, weekly_rate,
+        weight, category, cat_limit,
+        competitions, coaching
+    ))
+    print(f"\n  {name} registered successfully.\n")
+
+def handle_report(athletes):    # user picks an athlete and sees their report
+    if not athletes:
+        print("\n  No athletes registered yet.\n")
+        return
+    print("\n  Registered athletes:")
+    for i, athlete in enumerate(athletes, start=1):
+        print(f"    {i}. {athlete}")
+    pick = ask_number(
+        f"\n  Enter number (1-{len(athletes)}): ",
+        whole=True, minimum=1, maximum=len(athletes)
+    )
+    print_report(athletes[int(pick) - 1])
+
+def handle_summary(athletes):    # show summary table for all athletes
+    if not athletes:
+        print("\n  No athletes registered yet.\n")
+        return
+    print_summary(athletes)
+
+def handle_exit():
+    if ask_yes_no("\n  Exit the program? (y/n): "):
+        print("\n  Thank you for using the North Sussex Judo Calculator.")
+        print("  Developed by AQDS\n")
+        raise SystemExit
+
+
+# MAIN LOOP
+
+def main():
+    athletes = []   # stores all registered Athlete objects
+
+    handlers = {
+        "1": lambda: handle_register(athletes),
+        "2": lambda: handle_report(athletes),
+        "3": lambda: handle_summary(athletes),
+        "4": handle_exit,
+    }
+
+    while True:
+        clear_screen()
+        print_header()
+        print(f"\n  Athletes registered: {len(athletes)}\n")
+        print("  1. Register a new athlete")
+        print("  2. View athlete report")
+        print("  3. View all athletes summary")
+        print("  4. Exit\n")
+
+        choice = input("  Your choice (1-4): ").strip()
+
+        if choice in handlers:
+            handlers[choice]()
+            if choice != "4":
+                input("\n  Press Enter to continue...")
+        else:
+            print("\n  Please enter 1, 2, 3 or 4.")
+            input("  Press Enter to continue...")
+
+
+if __name__ == "__main__":
+    main()
