@@ -2,7 +2,7 @@
 
 **Unit 1: Programming | BTEC HND Computing (Software Engineering)**  
 **AQ Digital Solutions (AQDS) | Academic Year: 2024/25**  
-**Student: Vihanga Shamod Hewanayake | ID: 521546**
+**Name: Vihanga Shamod Hewanayake | ID: 521546**
 
 ---
 
@@ -16,7 +16,7 @@ It calculates and displays monthly training fees for each athlete based on their
 ## How to Run
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 Requires Python 3.8 or above. No extra libraries needed.
@@ -113,10 +113,3 @@ This project follows **PEP 8** (Python Style Guide):
 - Lines kept within ~79 characters
 
 ---
-
-## Assignment
-
-- **Assignment:** Introduction to Algorithms and Programming with an IDE
-- **Unit:** Unit 1: Programming
-- **Learning Outcomes:** LO1, LO2, LO3, LO4
-- **Distinction Criteria:** D1, D3, D4
